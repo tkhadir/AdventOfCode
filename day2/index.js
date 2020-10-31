@@ -26,8 +26,8 @@ let checkstop = (data, solution) => {
 let add = (data, input) => {
     let result = -1
     if (data[0] == opcode_add) {
-        console.log(data[1] + ' -' + input[data[1]] + ' + ' + input[data[2]] + ' - ' + data[2])
-        result = parseInt(input[data[1]]) + parseInt(input[data[2]])
+        console.log(data[1] + ' : ' + input[data[1]] + ' + ' + input[data[2]] + ' : ' + data[2])
+        result = input[data[1]] + input[data[2]]
         console.log(' = ' + result)
     }
     console.log('position ' + data[3] + ' got ' + result)
@@ -38,8 +38,8 @@ let add = (data, input) => {
 let multiply = (data, input) => {
     let result = -1
     if (data[0] == opcode_multiply) {
-        console.log(data[1] + ' -' + input[data[1]] + ' * ' + input[data[2]] + ' - ' + data[2])
-        result = parseInt(input[data[1]]) * parseInt(input[data[2]])
+        console.log(data[1] + ' : ' + input[data[1]] + ' * ' + input[data[2]] + ' : ' + data[2])
+        result = input[data[1]] * input[data[2]]
         console.log(' = ' + result)
     }
     console.log('position ' + data[3] + ' got ' + result)
@@ -93,5 +93,5 @@ let solve = (data) => {
 //console.log(bench0)
 
 console.log('found solution : ------------------')
-solve(inputs.split(','))
+solve(inputs.split(',').map(n => parseInt(n)))
 console.log('-----------------------------------')
