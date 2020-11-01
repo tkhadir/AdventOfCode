@@ -13,4 +13,5 @@ You notify the Elves that the computer's magic smoke seems to have escaped. "Tha
 
 # day 3
 
-find the smallest manhattan distance for the closest intersection
+- part 1 : find the smallest manhattan distance for the closest intersection
+- part 2 : compare by step
