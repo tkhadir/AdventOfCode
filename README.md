@@ -19,3 +19,4 @@ You notify the Elves that the computer's magic smoke seems to have escaped. "Tha
 # day 4
 
 - part 1 : find available passwords
+- part 2 : two digits are not member of larger group
