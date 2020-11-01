@@ -22,60 +22,70 @@ let manhattanDist = (x1, x2, y1, y2) => {
     return Math.abs(x2 - x1) + Math.abs(y2 - y1)
 }
 
-let addXpoints = (x1, step, y, tuples) => {
+let addXpoints = (x1, step, y, tuples, totstep) => {
     for (let i = 1; i <= step; i++) {
-        tuples.push({'x': (x1 + i), 'y': y})
+        tuples.push({'x': (x1 + i), 'y': y, 'step': (totstep + i)})
     }
 }
 
-let minusXpoints = (x1, step, y, tuples) => {
+let minusXpoints = (x1, step, y, tuples, totstep) => {
     for (let i = 1; i <= step; i++) {
-        tuples.push({'x': (x1 - i), 'y': y})
+        tuples.push({'x': (x1 - i), 'y': y, 'step': (totstep + i)})
     }
 }
 
-let addYpoints = (x, y1, step, tuples) => {
+let addYpoints = (x, y1, step, tuples, totstep) => {
     for (let i = 1; i <= step; i++) {
-        tuples.push({'x': x, 'y': (y1 + i)})
+        tuples.push({'x': x, 'y': (y1 + i), 'step': (totstep + i)})
     }
 }
 
-let minusYpoints = (x, y1, step, tuples) => {
+let minusYpoints = (x, y1, step, tuples, totstep) => {
     for (let i = 1; i <= step; i++) {
-        tuples.push({'x': x, 'y': (y1 - i)})
+        tuples.push({'x': x, 'y': (y1 - i), 'step': (totstep + i)})
     }
 }
 
-let operate = (p, tuples) => {
+let operate = (p, tuples, totstep) => {
+    let step  = 0
     if (p.includes('R')) {
         let last = tuples[tuples.length - 1]
-        addXpoints(last['x'], parseInt(p.replace('R', '')), last['y'], tuples)
+        step = parseInt(p.replace('R', ''))
+        addXpoints(last['x'], step, last['y'], tuples, totstep)
     }
     if (p.includes('L')) {
         let last = tuples[tuples.length - 1]
-        minusXpoints(last['x'], parseInt(p.replace('L', '')),  last['y'], tuples)
+        step = parseInt(p.replace('L', ''))
+        minusXpoints(last['x'], step,  last['y'], tuples, totstep)
     }
     if (p.includes('U')) {
         let last = tuples[tuples.length - 1]
-        addYpoints(last['x'], last['y'], parseInt(p.replace('U', '')), tuples)
+        step = parseInt(p.replace('U', ''))
+        addYpoints(last['x'], last['y'], step, tuples, totstep)
     }
     if (p.includes('D')) {
         let last = tuples[tuples.length - 1]
-        minusYpoints(last['x'], last['y'], parseInt(p.replace('D', '')), tuples)
+        step = parseInt(p.replace('D', ''))
+        minusYpoints(last['x'], last['y'], step, tuples, totstep)
     }
+    return step
 } 
 
-let foundCrossPoint = (d1, d2) => {
+let foundCrossPoint = (d1, d2, v) => {
     let center = {'x': 0, 'y': 0}
     let tuples1 = [center]
     let tuples2 = [center]
 
+    let s1 = 0
     d1.forEach(p => {
-        operate(p, tuples1)
+        let st = operate(p, tuples1, s1)
+        s1 += st
     })
 
+    let s2 = 0
     d2.forEach(p => {
-        operate(p, tuples2)
+        let st = operate(p, tuples2, s2)
+        s2 += st
     })
 
     console.log(tuples1)
@@ -86,15 +96,24 @@ let foundCrossPoint = (d1, d2) => {
     tuples1.forEach(p => {
         let result = tuples2.find(p2 => isPointsEqual(p['x'], p2['x'], p['y'], p2['y']) && p != center)
         if (result != undefined){
+            result['crossStep'] = p['step'] + result['step']
             cross.push(result)
         }
     })
 
-    cross = cross.sort((a, b) => manhattanDist(a['x'], center['x'], a['y'], center['y']) - manhattanDist(b['x'], center['x'], b['y'], center['y']))
+    if (v == 1) {
+        cross = cross.sort((a, b) => manhattanDist(a['x'], center['x'], a['y'], center['y']) - manhattanDist(b['x'], center['x'], b['y'], center['y']))
+        cross.forEach(c =>
+            console.log('dist ' + manhattanDist(c['x'], center['x'], c['y'], center['y']))
+        )
+    } else {
+        cross = cross.sort((a, b) => a['crossStep'] - b['crossStep'])
+        cross.forEach(c =>
+            console.log('steps ' + c['crossStep'])
+        )
+    }
     console.log(cross)
-    cross.forEach(c =>
-        console.log('dist ' + manhattanDist(c['x'], center['x'], c['y'], center['y']))
-    )
+    
     return cross
 }
 
@@ -111,4 +130,4 @@ let lines = []
 inputs.split('\n').forEach(l => lines.push(l.split(',')))
 
 
-foundCrossPoint(lines[0], lines[1])
+foundCrossPoint(lines[0], lines[1], 2)
