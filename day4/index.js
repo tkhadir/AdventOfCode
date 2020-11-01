@@ -23,7 +23,9 @@ console.log(inputs)
 
 let containsTwoSimilar = (data) => {
     return data.split('').find((d, index) => {
-        return index > 0 && (data[index] == data[index - 1]) 
+        return index > 0 
+        && (data[index] == data[index - 1])
+        && data.split('').filter(e => e == data[index]).length == 2
     }) != undefined
 }
 
@@ -37,6 +39,9 @@ let isIncreasing = (data) => {
     })
 }
 
+
+
+console.log(containsTwoSimilar('112233'))
 
 let availablePass = (min, max) => {
     let countc2 = 0
